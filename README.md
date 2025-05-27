@@ -94,3 +94,34 @@ Challenges:
 - Aligning user-friendly terms to schema
 
 All resolved with preprocessing, dynamic inference, and field aliasing.
+
+---
+
+## 🧠 AI Compliance Agent – Summary
+
+The AI Compliance Agent is a hybrid assistant that helps organizations stay audit-ready by answering compliance-related questions using both structured (SQL) and unstructured (policy PDFs) data.
+
+### 🔧 Key Features
+- ✅ Natural Language to SQL (NL2SQL) using Claude and Ollama
+- ✅ Document QA from PDF-based policies using vector search
+- ✅ Control statement extraction and evaluation
+- ✅ Data-aware prompting using live schema + min/max ranges
+- ✅ Secure setup using `.env` for all API keys
+- ✅ Works locally without OpenAI dependency (via Ollama)
+- ✅ Claude-compatible for enterprise-level document logic
+
+### 📚 Supported Query Types
+- "What is the total sales in the Southwest region last quarter?"
+- "Are we using the right shipping modes for high-value international orders?"
+- "What’s the definition of slow-moving inventory in our policy?"
+- "Which suppliers fail to meet ethical sourcing standards?"
+- "What are the top 10 products by return volume in the past year?"
+
+### 🛡 Security
+- API keys are stored in `.env`, never committed.
+- `.gitignore` ensures no secrets or local files are exposed.
+
+### 📺 Demo Video
+[![Watch on YouTube](https://img.youtube.com/vi/2bpAn2gPxyU/0.jpg)](https://www.youtube.com/watch?v=2bpAn2gPxyU)
+
+---
