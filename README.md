@@ -19,10 +19,16 @@ Edit `src/user_config.py` to simulate:
 - Region: `India`, `Global`, `EU`, etc.
 
 ## Demo Video
-(Link to your 10-min walkthrough)
 
-## Team
-- (IdliWadaSambhar) Naval Singh (21f1006368@ds.study.iitm.ac.in)
+Watch our full 10-minute demo on YouTube:
+
+[![Watch on YouTube](https://img.youtube.com/vi/2bpAn2gPxyU/0.jpg)](https://www.youtube.com/watch?v=2bpAn2gPxyU)
+
+➡️ [Click here to watch](https://www.youtube.com/watch?v=2bpAn2gPxyU)
+
+
+## Team IdliWadaSambhar
+- (Member) Naval Singh (21f1006368@ds.study.iitm.ac.in)
 
 🧠 Syngenta Policy + Data Compliance AI Agent
 Built for Paradox 2025 Hackathon
