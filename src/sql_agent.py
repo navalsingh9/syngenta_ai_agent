@@ -340,3 +340,16 @@ def ask_data_question(question: str, llm):
 
     except Exception as e:
         return sql_query, f"❌ Error executing SQL: {str(e)}"
+
+def get_ground_truth(nl_query: str) -> str | None:
+    import json, os
+    path = os.path.join(os.path.dirname(__file__), "test_cases.jsonl")
+    if not os.path.exists(path):
+        return None
+
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            case = json.loads(line)
+            if case["nl_query"].strip().lower() == nl_query.strip().lower():
+                return case["expected_sql"]
+    return None

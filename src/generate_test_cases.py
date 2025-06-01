@@ -1,0 +1,38 @@
+import json
+
+benchmark_queries = [
+    {
+        "nl_query": "What is the total sales amount for all orders?",
+        "expected_sql": "SELECT SUM(sales) FROM transactions;"
+    },
+    {
+        "nl_query": "What was the total sales amount for the Southwest region in the last quarter?",
+        "expected_sql": "SELECT SUM(sales) FROM transactions WHERE order_region = 'Southwest' AND order_date_dateorders_ BETWEEN '2025-01-01' AND '2025-03-31';"
+    },
+    {
+        "nl_query": "Which products have the highest profit margin across all categories?",
+        "expected_sql": "SELECT product_name, MAX(order_item_profit_ratio) AS max_profit_ratio FROM transactions GROUP BY product_name ORDER BY max_profit_ratio DESC;"
+    },
+    {
+        "nl_query": "Which shipping mode has the lowest rate of on-time deliveries?",
+        "expected_sql": "SELECT shipping_mode, AVG(late_delivery_risk) AS late_rate FROM transactions GROUP BY shipping_mode ORDER BY late_rate DESC LIMIT 1;"
+    },
+    {
+        "nl_query": "Who are our top 10 customers by total order value?",
+        "expected_sql": "SELECT customer_id, customer_fname, customer_lname, SUM(order_item_total) AS total_order_value FROM transactions GROUP BY customer_id, customer_fname, customer_lname ORDER BY total_order_value DESC LIMIT 10;"
+    },
+    {
+        "nl_query": "What is the average time between order date and shipping date by country?",
+        "expected_sql": "SELECT order_country, AVG(JULIANDAY(shipping_date_dateorders_) - JULIANDAY(order_date_dateorders_)) AS avg_shipping_time FROM transactions GROUP BY order_country;"
+    },
+    {
+        "nl_query": "What is the distribution of orders by customer segment and region?",
+        "expected_sql": "SELECT customer_segment, order_region, COUNT(order_id) AS order_count FROM transactions GROUP BY customer_segment, order_region;"
+    }
+]
+
+with open("src/test_cases.jsonl", "w", encoding="utf-8") as f:
+    for item in benchmark_queries:
+        f.write(json.dumps(item) + "\n")
+
+print("✅ test_cases.jsonl saved in src/")
