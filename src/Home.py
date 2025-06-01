@@ -105,7 +105,7 @@ def log(message):
 
 def get_llm(model_choice: str):
     if "Claude" in model_choice:
-        api_key = os.getenv("CLAUDE_BEDROCK_API_KEY")
+        api_key = os.getenv("CLAUDE_SECRET_ACCESS_KEY")
         if not api_key:
             st.error("Claude Bedrock API key not found in .env")
             st.stop()
