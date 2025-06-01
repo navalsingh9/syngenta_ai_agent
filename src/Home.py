@@ -9,6 +9,7 @@ import os
 import time
 from sql_agent import get_ground_truth
 from metrics_tracker import init_db, record_metrics
+init_db()
 from metrics_tracker import get_recent_metrics
 
 

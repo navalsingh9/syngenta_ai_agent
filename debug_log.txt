@@ -498,3 +498,7 @@ FROM transactions
 WHERE product_quantity <= 5;
 [2025-06-01 12:44:29] Query Result: ❌ Error executing SQL: no such column: product_quantity
 [2025-06-01 12:45:08] Policy Answer: According to the Dataco Global Inventory Management Policy, a "slow-moving" item is defined as an item that has not been issued or used within the last 6 months. This is stated in section 6, "Slow Mover and No Mover Inventory Policy", under the definition of slow mover inventory.
+[2025-06-01 21:10:46] Generated SQL: [Error calling Claude API] 'response'
+[2025-06-01 21:10:46] Generated SQL: [Error calling Claude API] 'response'
+[2025-06-01 21:10:46] Query Result: ❌ Error executing SQL: near "[Error calling Claude API]": syntax error
+[2025-06-01 21:10:47] Policy Answer: [Error calling Claude API] 'response'
