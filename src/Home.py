@@ -105,7 +105,11 @@ def log(message):
 
 def get_llm(model_choice: str):
     if "Claude" in model_choice:
-        return ClaudeBedrockLLM(api_key="syn-8008f862-4c63-4bb5-a35d-fc0ea4684cb0")
+        api_key = os.getenv("CLAUDE_BEDROCK_API_KEY")
+        if not api_key:
+            st.error("Claude Bedrock API key not found in .env")
+            st.stop()
+        return ClaudeBedrockLLM(api_key=api_key)
     else:
         return OllamaLLM(model="llama3")
 
@@ -160,13 +164,6 @@ if user_query:
             ),
             latency=latency
         )
-
-    st.subheader("📈 Structured Data (NL2SQL)")
-    if debug_mode:
-        st.code(sql_query, language='sql')
-        log(f"Generated SQL: {sql_query}")
-    st.dataframe(result if isinstance(result, pd.DataFrame) else pd.DataFrame([{"error": result}]))
-    log(f"Query Result: {result if isinstance(result, str) else result.to_string(index=False)}")
 
     if matching_rows.empty or "policy" in user_query.lower():
         with st.spinner("Searching policy documents..."):
