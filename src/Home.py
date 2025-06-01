@@ -11,6 +11,10 @@ from sql_agent import get_ground_truth
 from metrics_tracker import init_db, record_metrics
 init_db()
 from metrics_tracker import get_recent_metrics
+from dotenv import load_dotenv
+load_dotenv()
+import os
+
 
 
 st.set_page_config(page_title="AI Agent for Syngenta", layout="wide")
