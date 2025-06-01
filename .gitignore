@@ -6,3 +6,4 @@ __pycache__/
 outputs/
 data/
 deprecated/
+debug_log.txt
