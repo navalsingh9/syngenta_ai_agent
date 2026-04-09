@@ -1,3 +1,4 @@
+import logging
 from fastapi import FastAPI
 from pydantic import BaseModel
 from sql_agent import ask_data_question
@@ -10,10 +11,12 @@ import os
 app = FastAPI()
 api_key = os.getenv("CLAUDE_SECRET_ACCESS_KEY")
 # Enable CORS for all origins (Android/web compatibility)
+# allow_credentials must remain False when allow_origins=["*"];
+# combining a wildcard origin with credentials is a CORS security misconfiguration.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -49,4 +52,5 @@ def ask_agent(request: QueryRequest):
         }
 
     except Exception as e:
-        return {"error": str(e)}
+        logging.exception("Unhandled error in /ask")
+        return {"error": "An internal error occurred. Please try again later."}

@@ -630,6 +630,22 @@ def warn_if_ungrouped_columns(sql: str) -> str:
         print(f"[⚠️ WARNING] The following selected columns are not included in GROUP BY: {ungrouped}")
     return sql
 
+
+_FORBIDDEN_SQL_KEYWORDS = re.compile(
+    r"^\s*(DROP|INSERT|UPDATE|DELETE|ALTER|CREATE|TRUNCATE|REPLACE|ATTACH|DETACH|PRAGMA)\b",
+    re.IGNORECASE | re.MULTILINE,
+)
+
+def _is_safe_select(sql: str) -> bool:
+    """Return True only if the query is a read-only SELECT and contains no
+    write/DDL statements anywhere in the string."""
+    stripped = sql.strip()
+    if not re.match(r"(?i)^\s*(WITH\s|SELECT\s)", stripped):
+        return False
+    if _FORBIDDEN_SQL_KEYWORDS.search(stripped):
+        return False
+    return True
+
 def ask_data_question(question: str, llm):
     is_claude = llm.__class__.__name__.lower().startswith("claude")
     prompt = get_prompt(llm)
@@ -655,6 +671,9 @@ def ask_data_question(question: str, llm):
 
     if any(ref in sql_query for ref in ["last_date", "last_quarter_start"]) and "WITH" not in sql_query.upper():
         return sql_query, "⚠️ Detected use of `last_date` or `last_quarter_start` without a `WITH` clause. Please include the full CTE block."
+
+    if not _is_safe_select(sql_query):
+        return sql_query, "❌ Generated query is not a safe SELECT statement and was blocked for security reasons."
 
     try:
         conn = sqlite3.connect("data/transactions.db")

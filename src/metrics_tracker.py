@@ -39,8 +39,9 @@ def record_metrics(llm_name, nl_query, generated_sql, expected_sql, result_match
         ))
 def get_recent_metrics(limit=50):
     import pandas as pd
+    limit = int(limit)
     with sqlite3.connect(DB_PATH) as conn:
         df = pd.read_sql_query(
-            f"SELECT * FROM evaluation ORDER BY timestamp DESC LIMIT {limit}", conn
+            "SELECT * FROM evaluation ORDER BY timestamp DESC LIMIT ?", conn, params=(limit,)
         )
     return df
