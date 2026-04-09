@@ -42,7 +42,7 @@ def get_recent_metrics(limit=50):
     try:
         limit = int(limit)
     except (TypeError, ValueError):
-        raise ValueError(f"Invalid limit parameter: must be an integer, got {limit!r}")
+        raise ValueError("Invalid limit parameter: must be an integer.")
     with sqlite3.connect(DB_PATH) as conn:
         df = pd.read_sql_query(
             "SELECT * FROM evaluation ORDER BY timestamp DESC LIMIT ?", conn, params=(limit,)

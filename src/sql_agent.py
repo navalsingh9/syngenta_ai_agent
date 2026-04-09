@@ -637,8 +637,19 @@ _FORBIDDEN_SQL_KEYWORDS = re.compile(
 )
 
 def _strip_sql_comments(sql: str) -> str:
-    """Remove SQL block comments (/* ... */) and line comments (-- ...)."""
-    sql = re.sub(r"/\*.*?\*/", " ", sql, flags=re.DOTALL)
+    """Remove SQL block comments (/* ... */) and line comments (-- ...).
+
+    Applies block-comment removal iteratively until no more block comments
+    remain, which handles nested or malformed comment delimiters safely.
+    Raises ValueError if a block comment is unmatched/unclosed.
+    """
+    # Reject unmatched comment delimiters (unclosed /* ... */)
+    if sql.count("/*") != sql.count("*/"):
+        raise ValueError("SQL contains unmatched block comment delimiters.")
+    prev = None
+    while prev != sql:
+        prev = sql
+        sql = re.sub(r"/\*.*?\*/", " ", sql, flags=re.DOTALL)
     sql = re.sub(r"--[^\n]*", " ", sql)
     return sql
 
@@ -656,7 +667,7 @@ def _is_safe_select(sql: str) -> bool:
     # Block multi-statement queries
     if ";" in normalised:
         return False
-    if not re.match(r"(?i)^\s*(WITH\s|SELECT\s)", normalised):
+    if not re.match(r"(?i)^(WITH\s|SELECT\s)", normalised):
         return False
     if _FORBIDDEN_SQL_KEYWORDS.search(normalised):
         return False
