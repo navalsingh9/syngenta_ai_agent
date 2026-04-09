@@ -632,17 +632,33 @@ def warn_if_ungrouped_columns(sql: str) -> str:
 
 
 _FORBIDDEN_SQL_KEYWORDS = re.compile(
-    r"^\s*(DROP|INSERT|UPDATE|DELETE|ALTER|CREATE|TRUNCATE|REPLACE|ATTACH|DETACH|PRAGMA)\b",
-    re.IGNORECASE | re.MULTILINE,
+    r"\b(DROP|INSERT|UPDATE|DELETE|ALTER|CREATE|TRUNCATE|REPLACE|ATTACH|DETACH|PRAGMA)\b",
+    re.IGNORECASE,
 )
+
+def _strip_sql_comments(sql: str) -> str:
+    """Remove SQL block comments (/* ... */) and line comments (-- ...)."""
+    sql = re.sub(r"/\*.*?\*/", " ", sql, flags=re.DOTALL)
+    sql = re.sub(r"--[^\n]*", " ", sql)
+    return sql
 
 def _is_safe_select(sql: str) -> bool:
     """Return True only if the query is a read-only SELECT and contains no
-    write/DDL statements anywhere in the string."""
-    stripped = sql.strip()
-    if not re.match(r"(?i)^\s*(WITH\s|SELECT\s)", stripped):
+    write/DDL statements anywhere in the string.
+
+    Defences applied:
+    - SQL comments are stripped before inspection to prevent comment-smuggling.
+    - Semicolons are rejected to prevent multi-statement injection.
+    - Forbidden DML/DDL keywords are searched anywhere in the normalised string.
+    - Only queries that start with SELECT or a WITH clause are permitted.
+    """
+    normalised = _strip_sql_comments(sql).strip()
+    # Block multi-statement queries
+    if ";" in normalised:
         return False
-    if _FORBIDDEN_SQL_KEYWORDS.search(stripped):
+    if not re.match(r"(?i)^\s*(WITH\s|SELECT\s)", normalised):
+        return False
+    if _FORBIDDEN_SQL_KEYWORDS.search(normalised):
         return False
     return True
 
