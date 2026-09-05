@@ -29,7 +29,7 @@ class QueryRequest(BaseModel):
 def ask_agent(request: QueryRequest):
     try:
         # Choose model based on request
-        llm = ClaudeBedrockLLM(api_key) if "claude" in request.model.lower() else OllamaLLM(model="llama3")
+        llm = ClaudeBedrockLLM() if "claude" in request.model.lower() else OllamaLLM(model="llama3")
 
         # Perform SQL + document-based QA
         sql, result = ask_data_question(request.question, llm)

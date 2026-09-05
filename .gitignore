@@ -7,3 +7,8 @@ outputs/
 data/
 deprecated/
 debug_log.txt
+*.db
+*.sqlite3
+.env.*
+!.env.example
+test_log.csv

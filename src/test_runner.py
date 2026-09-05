@@ -16,7 +16,7 @@ test_prompts = [
 ]
 
 # Select model
-model = ClaudeBedrockLLM(api_key="${CLAUDE_SECRET_ACCESS_KEY}")
+model = ClaudeBedrockLLM()
 vs = load_policy_vectorstore()
 
 # Logging setup

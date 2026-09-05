@@ -12,7 +12,7 @@ st.title("🧪 Automated Test Runner for AI Agent")
 # LLM Selection
 model_choice = st.selectbox("Choose Model to Test:", ["Claude 3.5 Sonnet (Hackathon)", "Ollama (Local fallback)"])
 if "Claude" in model_choice:
-    llm = ClaudeBedrockLLM(api_key="${CLAUDE_SECRET_ACCESS_KEY}")
+    llm = ClaudeBedrockLLM()
 else:
     llm = OllamaLLM(model="llama3")
 
